@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <style>
+        *{
+            margin:0px;
+            font-family: "Source Code Pro";
+        }
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            min-height: 100vh;
+            background-color: rgb(59, 59, 59);
+            background-image: url(images/fundodragon.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            
+            
+        }
+
+        #main{ 
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: rgba(128, 128, 128, 0.308);
+            box-shadow: 10px 10px 15px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            transform: scale(1.2);
+            
+          
+        }
+        #btnlogin{
+            padding: 5px;
+            font-size: 15px;
+        }
+
+        #dragon{
+       
+            width: 100px;
+            /*Alinha ele mesmo*/
+            align-self: center;
+
+        }
+
+        #texto{
+            color: white;
+        }
+
+        #cadastro{
+            color: white;
+        }
+
+        #btncadastro{
+            border-radius:5px;
+            background-color: rgba(0, 0, 0, 0.993);
+            color: white;
+        }
+
+        #text-up{
+            color: white;
+            margin: 100px;
+            font-size: 20px;
+        }
+
+   
+
+      
+
+  
+  
+
+   
+    </style>
+</head>
+<body>
+    <div id="text-up">
+     <h1>Seja bem vindo!</h1>
+    <h1>O Discord chora</h1>
+    </div>
+    
+    
+    <div id="main">
+        <img id="dragon" src="images/dragon.png" alt="">
+        <p id="texto">LOGIN</p>
+        <input type="email" placeholder="E-mail">
+        <p id="texto">SENHA</p>
+        <input type="text" placeholder="Senha">
+        <button id="btnlogin">LOGIN</button>
+        <p id="cadastro">Sem conta?<button id="btncadastro">Cadastre-se</button></p>
+    </div>
+    
+</body>
+</html>
