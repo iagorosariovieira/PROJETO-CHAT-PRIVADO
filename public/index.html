@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Descoteca</title>
+    <link rel="icon" href="images/dragon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
@@ -52,6 +53,7 @@
             padding: 5px;
             font-size: 15px;
             width: 200px;
+            cursor: pointer;
         }
 
         #dragon{
@@ -62,18 +64,27 @@
 
         }
 
-        #texto{
+        .texto{
             color: white;
         }
 
         #cadastro{
             color: white;
+            
+            
         }
 
         #btncadastro{
             border-radius:5px;
-            background-color: rgba(0, 0, 0, 0.993);
-            color: white;
+            color: rgb(24, 190, 255);
+            cursor: pointer;
+            text-decoration: underline;
+            transition: all 0.25s ease;
+            
+        }
+
+        #btncadastro:hover{
+            color: rgb(64, 119, 238);
         }
 
         #text-up{
@@ -84,19 +95,37 @@
 
         #nomesite{
             color: gray;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            text-decoration: underline;
+            
+            
         
         }
-
-   
-
       
 
-  
-  
 
-   
+        #cadastro-things{
+            display: flex;
+            gap: 2px;
+            color: white;
+        
+            
+        }
+
+
+      
     </style>
+
+
+
+
+
+
+
+
+
+
+
 </head>
 <body>
     <div id="text-up">
@@ -107,12 +136,17 @@
     
     <div id="main">
         <img id="dragon" src="images/dragon.png" alt="logo do site">
-        <p id="texto">LOGIN</p>
+        <p class="texto">LOGIN</p>
         <input type="email" placeholder="E-mail">
-        <p id="texto">SENHA</p>
-        <input type="text" placeholder="Senha">
+        <p class="texto">SENHA</p>
+        <input type="password" placeholder="Senha">
         <button id="btnlogin">LOGIN</button>
-        <p id="cadastro">Sem conta?<button id="btncadastro">Cadastre-se</button></p>
+        <div id="cadastro-things">
+            <p id="cadastro">Sem conta?</p>
+            <a href = home.html id="btncadastro">Cadastre-se</a>
+
+        </div>
+        
     </div>
     
 </body>
