@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 
 app.get("/cadastro/:nome_completo/:email/:telefone/:senha", (req, res) => {
     var user = req.params.nome_completo;
-    var email = req.params.e-mail;
+    var email = req.params.email;
     var telefone = req.params.telefone;
     var senha = req.params.senha;
 
@@ -37,7 +37,7 @@ app.get("/cadastro/:nome_completo/:email/:telefone/:senha", (req, res) => {
 
     db.run(query, [user, email, telefone, senha], (err) => {
         if (err) res.send(err);
-        else res.send("1")
+        else res.json(1)
     })
 })
 
