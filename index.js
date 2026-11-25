@@ -52,16 +52,13 @@ app.get("/api/:login/:senha,", (req, res) => {
 
     db.all(query, (err, rows) => {
 
-        for (var x = 0; x < rows.length; x++){
-            if (login == rows[x].EMAIL && senha == rows[x].SENHA) {
-                return res.json({
-                    CHECK: true,
-                    NOME: rows[x].NOME_COMPLETO
-                });
-            }
-        }
+        if(err) console.log(err);
+        else console.log(rows);
+                })
+            
+        
         return res.json({CHECK: false});
-    })
 })
+
 
 app.listen(3000);
