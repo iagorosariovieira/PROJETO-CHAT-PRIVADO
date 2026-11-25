@@ -24,24 +24,24 @@ CriarDatabase();
 
 app.get("/", (req, res) => {
     
-    res.sendFile(path.join(__dirname, 'public', 'Cadastro.html'));
+    res.sendFile(path.join(__dirname, 'public', 'cadastro.html'));
 });
 
 app.get("/cadastro/:nome_completo/:email/:telefone/:senha", (req, res) => {
-    var user = req.params.nome_completo;
+    var nome = req.params.nome_completo;
     var email = req.params.email;
     var telefone = req.params.telefone;
     var senha = req.params.senha;
 
-    var query = "INSERT INTO CADASTRO (NOME_COMPLETO, EMAIL, TELEFONE, SENHA ) VALUES (?, ?, ?, ?)";
+    var query = "INSERT INTO CADASTRO (NOME_COMPLETO, EMAIL, TELEFONE, SENHA) VALUES (?, ?, ?, ?)";
 
-    db.run(query, [user, email, telefone, senha], (err) => {
+    db.run(query, [nome, email, telefone, senha], (err) => {
         if (err) res.send(err);
         else res.json(1)
     })
 })
 
-app.get("/api/:login/:senha,", (req, res) => {
+app.get("/api/:login/:senha", (req, res) => {
     var login = req.params.login;
     var senha = req.params.senha;
 
