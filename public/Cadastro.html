@@ -27,7 +27,7 @@
 
         }
         body {
-            background-image: url(/public/images/fundodragon.png);
+            background-image: url(fundodragon.png);
             background-size: cover;
             background-repeat: no-repeat;
         }
@@ -91,13 +91,39 @@ a:hover {
 
 
     </style>
+ 
+<script>
+
+    function Cadastrar() {
+        var nome = document.getElementById("nome").value;
+        var email= document.getElementById("email").value;
+        var telefone = document.getElementById("telefone").value;
+        var senha = document.getElementById("senha").value;
+
+        fetch('/cadastro/${nome}/${email}/${telefone}/${senha}')
+        .then(Response => Response.json())
+        .then(data => {
+        
+        if(1)console.log("Usuario Cadastrado com Sucesso!");
+        else console.log("Cadastro invalido!");
+
+
+        })
+
+    }
+
+
+</script>
+
+
+
 
 </head>
 
 <body>
 
     <div id= "box">
-        <img id="dragon" src="images/dragon.png">
+        <img id="dragon" src="dragon.png">
         <h2 id="texto"> Criar sua conta</h2>
             <p class="texto">Nome completo</p>
             <input placeholder="Digite seu nome" type="text" class = "btnmargem">
@@ -110,7 +136,7 @@ a:hover {
 
 
 
-        <button id="btncada">Criar conta</button>
+        <button id="btncada" onclick="Cadastrar()">Criar conta</button>
 
 
         <div id = "conta"> 
