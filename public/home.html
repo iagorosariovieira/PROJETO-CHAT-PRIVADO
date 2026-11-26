@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descoteca - Home</title>
+    <link rel="icon" href="images/dragon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Source Code Pro", monospace;
+        }
+
+        body {
+            background-image: url("images/fundodragon.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #coluna-mapa {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        #globo-brilhante {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #f8fafc, #94a3b8 55%, #334155 100%);
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 0 18px #cbd5e1, 0 0 38px rgba(226, 232, 240, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulsarGlobo 2.4s infinite ease-in-out;
+        }
+
+        #globo-brilhante img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        @keyframes pulsarGlobo {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 16px #cbd5e1, 0 0 32px rgba(226, 232, 240, 0.65);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 0 26px #ffffff, 0 0 52px rgba(248, 250, 252, 0.95);
+            }
+        }
+
+        #mapa {
+            position: relative;
+            width: 780px;
+            height: 500px;
+            background-image: url("images/edited-image.jpg");
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #64748b;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.65);
+        }
+
+        .sala {
+            position: absolute;
+            border: none;
+            background-color: rgba(86, 119, 196, 0.12);
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 13px;
+            color: #e2e8f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .sala.ativa {
+            box-shadow: inset 0 0 15px 2px rgba(56, 189, 248, 0.3);
+            background-color: rgba(51, 65, 85, 0.3);
+        }
+
+        .sala img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        #sala1 {
+            left: 50px;
+            top: 60px;
+            width: 220px;
+            height: 160px;
+        }
+
+        #sala2 {
+            left: 480px;
+            top: 260px;
+            width: 240px;
+            height: 170px;
+        }
+
+        .avatar-player {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background-image: url("images/player-dragon.png");
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            z-index: 5;
+        }
+
+        .nome-player {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.85);
+            padding: 1px 6px;
+            border-radius: 6px;
+            font-size: 10px;
+            white-space: nowrap;
+            color: #f8fafc;
+        }
+
+        #painel {
+            width: 360px;
+            height: 568px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: rgba(30, 32, 38, 0.85);
+            border: 2px solid #64748b;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.65);
+        }
+
+        #topo-painel {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #475569;
+            padding-bottom: 10px;
+        }
+
+        #topo-painel img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+        }
+
+        #titulo-sala {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        #mensagens {
+            flex: 1;
+            background-color: rgba(15, 17, 22, 0.88);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        #area-envio {
+            display: flex;
+            gap: 8px;
+        }
+
+        #input-msg {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid #64748b;
+            background-color: #14161c;
+            color: white;
+        }
+
+        #input-msg:disabled {
+            opacity: 0.5;
+        }
+
+        button {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: none;
+            background-color: #cbd5e1;
+            color: #0f172a;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #f8fafc;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div id="coluna-mapa">
+        <div id="globo-brilhante" title="Descoteca">
+            <img src="images/dragon.png" alt="Globo Descoteca">
+        </div>
+
+        <div id="mapa">
+            <div id="sala1" class="sala">
+                <img src="images/dragon.png" alt="dragão">
+                <span>Sala 1 - Geral</span>
+            </div>
+            <div id="sala2" class="sala">
+                <img src="images/dragon.png" alt="dragão">
+                <span>Sala 2 - Jogos</span>
+            </div>
+            <div id="player" class="avatar-player">
+                <span id="meu-nome" class="nome-player">Você</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="painel">
+        <div id="topo-painel">
+            <img src="images/dragon.png" alt="Logo Descoteca">
+            <div>
+                <h2>DESCOTECA</h2>
+                <p id="titulo-sala">Fora de sala (use WASD ou setas)</p>
+            </div>
+        </div>
+
+        <div id="mensagens">
+            <p>Entre na Sala 1 ou Sala 2 para abrir o histórico e conversar.</p>
+        </div>
+
+        <div id="area-envio">
+            <input type="text" id="input-msg" placeholder="Entre numa sala para falar..." disabled>
+            <button id="btn-enviar" onclick="enviarMensagem()" disabled>Enviar</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const params = new URLSearchParams(window.location.search);
+        const nomeUsuario = params.get("nome") || localStorage.getItem("nomeUsuario") || `Dragão_${Math.floor(Math.random() * 1000)}`;
+        localStorage.setItem("nomeUsuario", nomeUsuario);
+
+        const mapa = document.getElementById("mapa");
+        const playerEl = document.getElementById("player");
+        document.getElementById("meu-nome").textContent = nomeUsuario;
+
+        const tituloSalaEl = document.getElementById("titulo-sala");
+        const mensagensEl = document.getElementById("mensagens");
+        const inputMsgEl = document.getElementById("input-msg");
+        const btnEnviarEl = document.getElementById("btn-enviar");
+
+        let posX = 390;
+        let posY = 250;
+        const velocidade = 10;
+        let salaAtual = null;
+        const outrosPlayersEl = {};
+
+        socket.emit("entrarMapa", { nome: nomeUsuario, x: posX, y: posY });
+
+        function desenharPlayer() {
+            playerEl.style.left = posX + "px";
+            playerEl.style.top = posY + "px";
+        }
+
+        function adicionarMensagemNaTela(autor, texto) {
+            const p = document.createElement("p");
+            p.innerHTML = `<strong>${autor}:</strong> ${texto}`;
+            mensagensEl.appendChild(p);
+            mensagensEl.scrollTop = mensagensEl.scrollHeight;
+        }
+
+        socket.on("historicoSala", ({ sala, mensagens }) => {
+            if (sala !== salaAtual) return;
+            mensagensEl.innerHTML = "";
+            if (mensagens.length === 0) {
+                mensagensEl.innerHTML = "<p>Nenhuma mensagem ainda. Diga oi!</p>";
+                return;
+            }
+            mensagens.forEach((m) => adicionarMensagemNaTela(m.AUTOR, m.TEXTO));
+        });
+
+        socket.on("novaMensagem", ({ sala, autor, texto }) => {
+            if (sala !== salaAtual) return;
+            if (mensagensEl.textContent === "Nenhuma mensagem ainda. Diga oi!") {
+                mensagensEl.innerHTML = "";
+            }
+            adicionarMensagemNaTela(autor, texto);
+        });
+
+        socket.on("atualizarJogadores", (jogadores) => {
+            Object.keys(outrosPlayersEl).forEach((id) => {
+                if (!jogadores[id]) {
+                    outrosPlayersEl[id].remove();
+                    delete outrosPlayersEl[id];
+                }
+            });
+
+            Object.values(jogadores).forEach((j) => {
+                if (j.id === socket.id) return;
+                if (!outrosPlayersEl[j.id]) {
+                    const div = document.createElement("div");
+                    div.className = "avatar-player";
+                    div.innerHTML = `<span class="nome-player">${j.nome}</span>`;
+                    mapa.appendChild(div);
+                    outrosPlayersEl[j.id] = div;
+                }
+                outrosPlayersEl[j.id].style.left = j.x + "px";
+                outrosPlayersEl[j.id].style.top = j.y + "px";
+            });
+        });
+
+        socket.on("jogadorMoveu", (j) => {
+            if (j.id === socket.id || !outrosPlayersEl[j.id]) return;
+            outrosPlayersEl[j.id].style.left = j.x + "px";
+            outrosPlayersEl[j.id].style.top = j.y + "px";
+        });
+
+        function verificarSalas() {
+            const salas = [
+                { id: "sala1", nome: "Sala 1 - Geral", el: document.getElementById("sala1") },
+                { id: "sala2", nome: "Sala 2 - Jogos", el: document.getElementById("sala2") }
+            ];
+
+            let entrouEmAlguma = null;
+
+            salas.forEach((sala) => {
+                const rect = sala.el.getBoundingClientRect();
+                const mapaRect = mapa.getBoundingClientRect();
+
+                const left = rect.left - mapaRect.left;
+                const right = rect.right - mapaRect.left;
+                const top = rect.top - mapaRect.top;
+                const bottom = rect.bottom - mapaRect.top;
+
+                if (posX >= left && posX <= right && posY >= top && posY <= bottom) {
+                    entrouEmAlguma = sala;
+                    sala.el.classList.add("ativa");
+                } else {
+                    sala.el.classList.remove("ativa");
+                }
+            });
+
+            if (entrouEmAlguma) {
+                if (salaAtual !== entrouEmAlguma.id) {
+                    if (salaAtual) socket.emit("sairSala", salaAtual);
+                    salaAtual = entrouEmAlguma.id;
+                    tituloSalaEl.textContent = `Canal ativo: ${entrouEmAlguma.nome}`;
+                    inputMsgEl.disabled = false;
+                    btnEnviarEl.disabled = false;
+                    inputMsgEl.placeholder = `Mensagem em ${entrouEmAlguma.nome}...`;
+                    mensagensEl.innerHTML = "<p>Carregando mensagens...</p>";
+                    socket.emit("entrarSala", salaAtual);
+                }
+            } else if (salaAtual !== null) {
+                socket.emit("sairSala", salaAtual);
+                salaAtual = null;
+                tituloSalaEl.textContent = "Fora de sala (use WASD ou setas)";
+                inputMsgEl.disabled = true;
+                btnEnviarEl.disabled = true;
+                inputMsgEl.placeholder = "Entre numa sala para falar...";
+                mensagensEl.innerHTML = "<p>Entre na Sala 1 ou Sala 2 para abrir o histórico e conversar.</p>";
+            }
+        }
+
+        function enviarMensagem() {
+            if (!salaAtual) return;
+            const texto = inputMsgEl.value.trim();
+            if (!texto) return;
+
+            socket.emit("enviarMensagem", {
+                sala: salaAtual,
+                autor: nomeUsuario,
+                texto
+            });
+            inputMsgEl.value = "";
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (document.activeElement === inputMsgEl) {
+                if (e.key === "Enter") enviarMensagem();
+                return;
+            }
+
+            let moveu = false;
+            if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") { posY -= velocidade; moveu = true; }
+            if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") { posY += velocidade; moveu = true; }
+            if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") { posX -= velocidade; moveu = true; }
+            if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") { posX += velocidade; moveu = true; }
+
+            if (!moveu) return;
+
+            posX = Math.max(21, Math.min(mapa.clientWidth - 21, posX));
+            posY = Math.max(21, Math.min(mapa.clientHeight - 21, posY));
+
+            desenharPlayer();
+            verificarSalas();
+            socket.emit("mover", { x: posX, y: posY });
+        });
+
+        desenharPlayer();
+        verificarSalas();
+    </script>
+</body>
+</html>

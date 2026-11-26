@@ -95,8 +95,18 @@
         fetch(`/cadastro/${nome}/${email}/${telefone}/${senha}`)
           .then((Response) => Response.json())
           .then((data) => {
-            if (data == 1) console.log("Usuario Cadastrado com Sucesso!");
-            else console.log("Cadastro invalido!");
+            if (data == 1){
+              console.log("Usuário cadastrado com sucesso!!!");
+              alert("Usuário Cadastrado!!!");
+              window.location.href = "index.html"
+
+              
+            }else{
+              console.log("Cadastro invalido!");
+              alert("Erro de cadastro")
+              
+            }
+            
           });
       }
     </script>
@@ -119,8 +129,11 @@
       <input id="telefone" placeholder="Telefone" type="text" class="btnmargem" />
       <p class="texto">Senha</p>
       <input id="senha" placeholder="Crie uma senha" type="password" class="btnmargem" />
-
-      <button id="btncada" onclick="Cadastrar()">Criar conta</button>
+      <div>
+        <button  id="btncada" onclick="Cadastrar()">Criar conta</button>
+        
+      </div>
+      
 
       <div id="conta">
         <p class="texto">jà possui uma conta?</p>

@@ -1,64 +1,146 @@
 const express = require("express");
-const cors = require("cors");
-const sqlite = require("sqlite3");
+const http = require("http");
+const { Server } = require("socket.io");
+const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 
 const app = express();
-app.use(cors());
+const server = http.createServer(app);
+const io = new Server(server);
 
-var db = new sqlite.Database("Database.sqlite");
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use(express.static(path.join(__dirname, 'public')));
+const db = new sqlite3.Database("./banco.db");
 
+db.serialize(() => {
+    db.run(`
+        CREATE TABLE IF NOT EXISTS CADASTRO (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            NOME_COMPLETO TEXT NOT NULL,
+            EMAIL TEXT UNIQUE NOT NULL,
+            TELEFONE TEXT,
+            SENHA TEXT NOT NULL
+        )
+    `);
 
-function CriarDatabase(){
-    var query = "CREATE TABLE CADASTRO (ID INTEGER PRIMARY KEY AUTOINCREMENT, NOME_COMPLETO VARCHAR, EMAIL VARCHAR, TELEFONE VARCHAR, SENHA VARCHAR(255))";
-
-    db.run(query, (err) => {
-        if (err) console.log(err);
-        else console.log("Tabela criada!!!")
-    });
-}
-
-CriarDatabase();
-
-app.get("/", (req, res) => {
-    
-    res.sendFile(path.join(__dirname, 'public', 'cadastro.html'));
+    db.run(`
+        CREATE TABLE IF NOT EXISTS MENSAGENS (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            SALA TEXT NOT NULL,
+            AUTOR TEXT NOT NULL,
+            TEXTO TEXT NOT NULL,
+            DATA_ENVIO DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
 });
 
-app.get("/cadastro/:nome_completo/:email/:telefone/:senha", (req, res) => {
-    var nome = req.params.nome_completo;
-    var email = req.params.email;
-    var telefone = req.params.telefone;
-    var senha = req.params.senha;
+// Rota de cadastro compatível com o seu cadastro.html
+app.get("/cadastro/:nome/:email/:telefone/:senha", (req, res) => {
+    const { nome, email, telefone, senha } = req.params;
 
-    var query = "INSERT INTO CADASTRO (NOME_COMPLETO, EMAIL, TELEFONE, SENHA) VALUES (?, ?, ?, ?)";
+    if (!nome || !email || !senha) {
+        return res.json(0);
+    }
 
-    db.run(query, [nome, email, telefone, senha], (err) => {
-        if (err) res.send(err);
-        else res.json(1)
-    })
-})
+    db.run(
+        "INSERT INTO CADASTRO (NOME_COMPLETO, EMAIL, TELEFONE, SENHA) VALUES (?, ?, ?, ?)",
+        [nome, email, telefone, senha],
+        function (err) {
+            if (err) {
+                return res.json(0);
+            }
+            return res.json(1);
+        }
+    );
+});
 
-app.get("/api/:login/:senha", (req, res) => {
-    var login = req.params.login;
-    var senha = req.params.senha;
+// Rota de login compatível com o seu index.html
+app.get("/api/:email/:senha", (req, res) => {
+    const { email, senha } = req.params;
 
-    console.log("LOGIN =", login);
-    console.log("SENHA =", senha);
+    db.get(
+        "SELECT ID, NOME_COMPLETO, EMAIL FROM CADASTRO WHERE EMAIL = ? AND SENHA = ?",
+        [email, senha],
+        (err, row) => {
+            if (err || !row) {
+                return res.json({ CHECK: false });
+            }
+            return res.json({
+                CHECK: true,
+                NOME_COMPLETO: row.NOME_COMPLETO,
+                EMAIL: row.EMAIL
+            });
+        }
+    );
+});
 
-    var query = "SELECT * FROM CADASTRO";
+const jogadoresOnline = {};
 
-    db.all(query, (err, rows) => {
+io.on("connection", (socket) => {
+    socket.on("entrarMapa", (dados) => {
+        jogadoresOnline[socket.id] = {
+            id: socket.id,
+            nome: dados.nome || "Visitante",
+            x: dados.x || 390,
+            y: dados.y || 250
+        };
+        io.emit("atualizarJogadores", jogadoresOnline);
+    });
 
-        if(err) console.log(err);
-        else console.log(rows);
-                })
-            
-        
-        return res.json({CHECK: false});
-})
+    socket.on("mover", (pos) => {
+        if (jogadoresOnline[socket.id]) {
+            jogadoresOnline[socket.id].x = pos.x;
+            jogadoresOnline[socket.id].y = pos.y;
+            socket.broadcast.emit("jogadorMoveu", jogadoresOnline[socket.id]);
+        }
+    });
 
+    socket.on("entrarSala", (sala) => {
+        socket.join(sala);
+        db.all(
+            "SELECT AUTOR, TEXTO FROM MENSAGENS WHERE SALA = ? ORDER BY ID ASC LIMIT 50",
+            [sala],
+            (err, rows) => {
+                if (!err) {
+                    socket.emit("historicoSala", { sala, mensagens: rows });
+                }
+            }
+        );
+    });
 
-app.listen(3000);
+    socket.on("sairSala", (sala) => {
+        if (sala) socket.leave(sala);
+    });
+
+    socket.on("enviarMensagem", ({ sala, autor, texto }) => {
+        if (!sala || !texto || !texto.trim()) return;
+        const autorLimpo = autor || "Visitante";
+        const textoLimpo = texto.trim();
+
+        db.run(
+            "INSERT INTO MENSAGENS (SALA, AUTOR, TEXTO) VALUES (?, ?, ?)",
+            [sala, autorLimpo, textoLimpo],
+            (err) => {
+                if (!err) {
+                    io.to(sala).emit("novaMensagem", {
+                        sala,
+                        autor: autorLimpo,
+                        texto: textoLimpo
+                    });
+                }
+            }
+        );
+    });
+
+    socket.on("disconnect", () => {
+        delete jogadoresOnline[socket.id];
+        io.emit("atualizarJogadores", jogadoresOnline);
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+});
